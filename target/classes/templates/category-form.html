@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${category.id == null ? 'Kategorie hinzufügen | the nailshop' : 'Kategorie bearbeiten | the nailshop'}">Kategorie hinzufügen | the nailshop</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-products.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-categories.css}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="page-shell">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
+        <main id="main-content" class="product-form-page">
+            <section class="category-editor product-editor" aria-labelledby="category-form-title">
+                <h1 id="category-form-title" th:text="${category.id == null ? 'Kategorie hinzufügen' : 'Kategorie bearbeiten'}">Kategorie hinzufügen</h1>
+                <p th:if="${error}" th:text="${error}" class="admin-category-error" role="alert"></p>
+                <form class="admin-product-form" th:action="@{/admin/categories}" th:object="${category}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="admin-form-field">
+                        <label for="name">Kategoriename</label>
+                        <input type="text" th:field="*{name}" required>
+                    </div>
+                    <div class="admin-form-field">
+                        <label for="discountPercentage">Rabatt in Prozent (optional)</label>
+                        <input type="number" th:field="*{discountPercentage}" min="0" max="100" step="1" aria-describedby="discount-help">
+                        <small id="discount-help">Für keinen Rabatt leer lassen oder 0 eingeben.</small>
+                    </div>
+                    <div class="product-form-actions">
+                        <a class="admin-edit category-editor-cancel" th:href="@{/admin/categories}">Abbrechen</a>
+                        <button class="button admin-primary" type="submit">Kategorie speichern</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

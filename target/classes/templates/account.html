@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mein Konto | the nailshop</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="page-shell account-shell">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
+        <div class="account-layout">
+            <aside class="account-sidebar" aria-label="Kontonavigation">
+                <nav class="account-navigation" aria-label="Mein Konto">
+                    <a class="account-nav-link is-current" th:href="@{/account}" aria-current="page">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></svg>
+                        Übersicht
+                    </a>
+                    <a class="account-nav-link" th:href="@{/account/orders}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 3h3l3 13h11l3-10H6"/><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/></svg>
+                        Bestellungen
+                    </a>
+                    <a class="account-nav-link" href="#addresses">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Adressen
+                    </a>
+                    <a class="account-nav-link" href="#profile">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M3 22v-2a9 9 0 0 1 18 0v2Z"/></svg>
+                        Profil
+                    </a>
+                </nav>
+                <form class="signout-form" th:action="@{/logout}" method="post">
+                    <button class="account-nav-link" type="submit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 3H4v18h9M9 12h13m-5-5 5 5-5 5"/></svg>
+                        Abmelden
+                    </button>
+                </form>
+            </aside>
+
+            <main id="main-content" class="account-content">
+                <p th:if="${success}" th:text="${success}" class="account-message message-success" role="status"></p>
+                <p th:if="${error}" th:text="${error}" class="account-message message-error" role="alert"></p>
+
+                <section class="welcome-panel" aria-labelledby="welcome-title">
+                    <div class="welcome-heading">
+                        <h1 id="welcome-title">Willkommen, <span th:text="${customer.firstName}">Kunde</span></h1>
+                        <span class="admin-badge" th:if="${isAdmin}">Admin</span>
+                    </div>
+                    <p>Hier kannst du deine letzte Bestellung ansehen, gespeicherte Adressen verwalten und deine persönlichen Daten einsehen.</p>
+                </section>
+
+                <section id="latest-order" class="account-panel" aria-labelledby="order-title">
+                    <h2 id="order-title">Letzte Bestellung</h2>
+                    <p th:if="${latestOrder == null}" class="panel-empty">Du hast noch keine Bestellungen aufgegeben.</p>
+                    <div th:if="${latestOrder != null}" class="order-table-wrap" tabindex="0" role="region" aria-label="Details der letzten Bestellung">
+                        <table class="last-order-table">
+                            <thead><tr><th scope="col">Bestellnummer</th><th scope="col">Datum</th><th scope="col">Gesamt</th><th scope="col">Status</th></tr></thead>
+                            <tbody><tr>
+                                <td th:text="${'#' + latestOrder.id}">#1003</td>
+                                <td th:text="${#temporals.format(latestOrder.orderDate, 'dd.MM.yyyy')}">12.04.2025</td>
+                                <td th:text="${'€' + #numbers.formatDecimal(latestOrder.totalPrice, 1, 2)}">€15.49</td>
+                                <td><span class="order-status" th:text="${latestOrder.status == 'PAID' ? 'Bezahlt' : (latestOrder.status == 'PENDING_PAYMENT' ? 'Zahlung ausstehend' : (latestOrder.status == 'CANCELLED' ? 'Storniert' : (latestOrder.status == 'PAID_STOCK_ISSUE' ? 'Bezahlt – Bestandsproblem' : latestOrder.status)))}">Bezahlt</span></td>
+                            </tr></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="addresses" class="account-panel" aria-labelledby="addresses-title">
+                    <h2 id="addresses-title">Gespeicherte Adressen</h2>
+                    <details class="new-address">
+                        <summary class="outline-button">Neue Adresse hinzufügen</summary>
+                        <form class="address-form" th:action="@{/account/address}" th:object="${newAddress}" method="post">
+                            <div class="form-field"><label for="street">Straße</label><input type="text" th:field="*{street}" autocomplete="address-line1" required></div>
+                            <div class="form-field"><label for="houseNumber">Hausnummer</label><input type="text" th:field="*{houseNumber}" required></div>
+                            <div class="form-field"><label for="postalCode">Postleitzahl</label><input type="text" th:field="*{postalCode}" autocomplete="postal-code" required></div>
+                            <div class="form-field"><label for="city">Stadt</label><input type="text" th:field="*{city}" autocomplete="address-level2" required></div>
+                            <div class="form-field"><label for="country">Land</label><input type="text" th:field="*{country}" autocomplete="country-name" required></div>
+                            <div class="form-submit"><button type="submit" class="button">Adresse speichern</button></div>
+                        </form>
+                    </details>
+                    <p th:if="${addresses.isEmpty()}" class="panel-empty">Du hast noch keine Adresse hinzugefügt.</p>
+                    <div class="address-grid" th:unless="${addresses.isEmpty()}">
+                        <article class="address-card" th:each="address : ${addresses}">
+                            <p class="address-name"><span th:text="${customer.firstName}">Vorname</span> <span th:text="${customer.lastName}">Nachname</span></p>
+                            <p><span th:text="${address.street}">Straße</span> <span th:text="${address.houseNumber}">1</span><br>
+                                <span th:text="${address.postalCode}">12345</span> <span th:text="${address.city}">Stadt</span><br>
+                                <span th:text="${address.country}">Land</span></p>
+                            <div class="address-actions">
+                                <a class="outline-button" th:href="@{/account/address/{id}/edit(id=${address.id})}">Bearbeiten</a>
+                                <form th:action="@{/account/address/{id}/delete(id=${address.id})}" method="post"
+                                      onsubmit="return confirm('Are you sure you want to delete this address?');">
+                                    <button class="delete-button" type="submit">Löschen</button>
+                                </form>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section id="profile" class="account-panel" aria-labelledby="profile-title">
+                    <h2 id="profile-title">Profil</h2>
+                    <dl class="profile-details">
+                        <div><dt>Name</dt><dd><span th:text="${customer.firstName}">Vorname</span> <span th:text="${customer.lastName}">Nachname</span></dd></div>
+                        <div><dt>E-Mail-Adresse</dt><dd th:text="${customer.email}">customer@example.com</dd></div>
+                    </dl>
+                </section>
+
+                <section id="admin-management" class="account-panel" th:if="${isAdmin}" aria-labelledby="manage-title">
+                    <h2 id="manage-title">Shop verwalten</h2>
+                    <div class="management-links">
+                        <a class="outline-button" th:href="@{/admin/products}">Produkte verwalten</a>
+                        <a class="outline-button" th:href="@{/admin/categories}">Kategorien verwalten</a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

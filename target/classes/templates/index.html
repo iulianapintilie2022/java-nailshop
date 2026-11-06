@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>nailshop | Entdecke deine nächste Farbe</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/home-carousel.css}">
+    <script th:src="@{/js/home-cart.js}" defer></script>
+    <script th:src="@{/js/home-carousel.js}" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="page-shell">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
+        <main id="main-content">
+            <section class="hero" aria-labelledby="hero-title">
+                <h1 id="hero-title">Entdecke deine nächste Farbe</h1>
+                <p>Neue Farben und besondere Angebote</p>
+                <a class="button hero-button" th:href="@{/products}">Jetzt shoppen</a>
+            </section>
+
+            <section id="categories" class="shop-section" aria-labelledby="categories-title">
+                <h2 id="categories-title">Nach Kategorie shoppen</h2>
+                <div class="category-grid" th:if="${not #lists.isEmpty(categories)}">
+                    <th:block th:each="category, categoryStatus : ${categories}">
+                        <a th:if="${categoryStatus.index lt 4}"
+                           class="category-tile"
+                           th:href="@{/products(categoryId=${category.id})}"
+                           th:text="${category.name}">Kategorie</a>
+                    </th:block>
+                </div>
+                <p class="empty-message" th:if="${#lists.isEmpty(categories)}">Noch keine Kategorien verfügbar.</p>
+            </section>
+
+            <section class="shop-section" aria-labelledby="featured-title" aria-roledescription="carousel">
+                <div class="featured-heading">
+                    <h2 id="featured-title">Ausgewählte Produkte</h2>
+                    <div class="carousel-controls" hidden>
+                        <button type="button" class="carousel-previous" aria-label="Vorherige ausgewählte Produkte" aria-controls="featured-carousel">←</button>
+                        <button type="button" class="carousel-next" aria-label="Nächste ausgewählte Produkte" aria-controls="featured-carousel">→</button>
+                    </div>
+                </div>
+                <div id="featured-carousel" class="featured-carousel" role="region" aria-label="Ausgewählte Produkte" tabindex="0"
+                     th:if="${not #lists.isEmpty(featuredProducts)}">
+                    <article class="product-card" th:each="product : ${featuredProducts}">
+                        <a class="product-image" th:href="@{/products}" th:aria-label="${'Zum Shop: ' + product.name}">
+                            <img th:src="${product.imageUrl}" th:alt="${product.name}">
+                        </a>
+                        <div class="product-details">
+                            <h3><a class="featured-product-name" th:href="@{/products}" th:text="${product.name}">Produktname</a></h3>
+                            <p class="product-description" th:text="${product.description}">Produktbeschreibung</p>
+                            <p>Kategorie: <span th:text="${product.category != null ? product.category.name : 'Keine Kategorie'}">Kategorie</span></p>
+                            <p class="product-price">
+                                Preis:
+                                <th:block th:if="${product.category != null and product.category.discountPercentage != null and product.category.discountPercentage > 0}">
+                                    <del th:text="${'€' + #numbers.formatDecimal(product.price, 1, 2)}">€15.49</del>
+                                    <strong th:text="${'€' + product.discountedPrice}">€4.65</strong>
+                                    <span class="discount" th:text="${'-' + product.category.discountPercentage + '%'}">-70%</span>
+                                </th:block>
+                                <span th:unless="${product.category != null and product.category.discountPercentage != null and product.category.discountPercentage > 0}"
+                                      th:text="${'€' + product.discountedPrice}">€15.49</span>
+                            </p>
+                            <p>Bestand: <span th:text="${product.stock != null ? product.stock : 0}">0</span></p>
+                        </div>
+                        <form class="add-to-cart-form" th:action="@{/cart/add/{id}(id=${product.id})}" method="post">
+                            <button class="button add-to-cart-btn" type="submit" aria-live="polite">In den Warenkorb</button>
+                        </form>
+                    </article>
+                </div>
+                <p class="empty-message" th:if="${#lists.isEmpty(featuredProducts)}">Noch keine Produkte verfügbar.</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+.cart-main { margin-top: 20px; padding: 28px 24px; border-radius: 8px; background: #f7faff; }
+.cart-main h1 { margin: 0 0 26px; font-size: 36px; line-height: 1.2; letter-spacing: -0.8px; }
+.cart-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; align-items: start; }
+.cart-items { min-width: 0; padding: 0 22px; border: 1px solid var(--border); border-radius: 7px; background: #fff; }
+.cart-item { display: grid; grid-template-columns: 96px minmax(0, 1fr) 120px 32px; align-items: center; gap: 18px; padding: 24px 0; }
+.cart-item + .cart-item { border-top: 1px solid var(--border); }
+.cart-product-image { display: block; width: 96px; height: 128px; border-radius: 5px; object-fit: cover; background: var(--panel); }
+.cart-product-info { min-width: 0; overflow-wrap: anywhere; }
+.cart-product-info h2 { margin: 0 0 10px; font-size: 19px; line-height: 1.3; }
+.cart-unit-price { margin: 0; }
+.cart-item-subtotal { margin: 8px 0 0; font-size: 14px; color: #4a526b; }
+.cart-quantity-form, .cart-remove-form { margin: 0; }
+.quantity-label { display: block; margin-bottom: 6px; color: #4a526b; font-size: 13px; text-align: center; }
+.quantity-control { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: hidden; border: 1px solid var(--border); border-radius: 5px; }
+.quantity-control button, .cart-quantity { display: flex; align-items: center; justify-content: center; min-height: 42px; }
+.quantity-control button { padding: 0; border: 0; background: #fff; color: var(--ink); font-size: 22px; cursor: pointer; }
+.quantity-control button:hover { background: #edf2fa; }
+.quantity-control button:focus-visible { outline-offset: -3px; }
+.cart-quantity { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+.cart-remove-button { display: flex; align-items: center; justify-content: center; width: 32px; min-height: 42px; padding: 4px; border: 0; border-radius: 4px; background: #fff; color: var(--ink); cursor: pointer; }
+.cart-remove-button svg { width: 24px; height: 24px; }
+.cart-remove-button:hover { background: #fff0f3; color: #b72e45; }
+.cart-summary { min-width: 0; padding: 22px; border: 1px solid var(--border); border-radius: 7px; background: #fff; }
+.cart-summary h2 { margin: 0 0 30px; font-size: 23px; line-height: 1.3; }
+.summary-subtotal, .summary-total { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.summary-subtotal { padding-bottom: 24px; }
+.summary-total { padding-top: 22px; border-top: 1px solid var(--border); font-size: 23px; font-weight: 700; }
+.checkout-button { width: 100%; margin-top: 24px; background: #c8ebd3; color: #205438; font-weight: 700; }
+.checkout-button:hover { background: #b3dfc1; }
+.continue-shopping { display: inline-flex; align-items: center; gap: 12px; margin-top: 26px; padding: 12px 20px; border: 1px solid #b6c7e4; border-radius: 5px; background: #fff; color: #405a9c; text-decoration: none; }
+.continue-shopping:hover { background: #edf2fa; }
+.cart-empty { margin: 0; padding: 28px 0; }
+.cart-error-message { margin: 0 0 22px; padding: 14px 18px; border: 1px solid #ecc6cc; border-radius: 6px; background: #fff2f3; color: #9b273b; }
+
+@media (max-width: 1000px) {
+    .cart-layout { grid-template-columns: 1fr; }
+    .cart-summary { width: 100%; }
+}
+
+@media (max-width: 600px) {
+    .cart-main { padding: 22px 14px; }
+    .cart-main h1 { font-size: 28px; }
+    .cart-items { padding: 0 14px; }
+    .cart-item { grid-template-columns: 72px minmax(0, 1fr) 32px; grid-template-areas: 'image info remove' 'image quantity quantity'; gap: 12px; padding: 20px 0; }
+    .cart-product-image { grid-area: image; width: 72px; height: 96px; align-self: start; }
+    .cart-product-info { grid-area: info; }
+    .cart-product-info h2 { font-size: 17px; }
+    .cart-unit-price { font-size: 14px; }
+    .cart-quantity-form { grid-area: quantity; width: 120px; }
+    .cart-remove-form { grid-area: remove; align-self: start; }
+    .quantity-label { text-align: left; }
+    .cart-summary { padding: 20px; }
+    .cart-summary h2 { font-size: 22px; }
+    .summary-total { font-size: 22px; }
+    .continue-shopping { width: 100%; justify-content: center; }
+}

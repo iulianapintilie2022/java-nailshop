@@ -1,0 +1,21 @@
+.featured-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.featured-heading h2 { margin: 0; }
+.carousel-controls { display: flex; gap: 8px; }
+.carousel-controls[hidden] { display: none; }
+.carousel-controls button { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--border); border-radius: 6px; background: #fff; color: var(--ink); font-size: 23px; cursor: pointer; }
+.carousel-controls button:hover { background: var(--panel); }
+.carousel-controls button:disabled { opacity: 0.4; cursor: default; }
+.featured-carousel { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 28px) / 3); gap: 14px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding-bottom: 14px; scrollbar-width: thin; }
+.featured-carousel .product-card { scroll-snap-align: start; }
+.featured-carousel:focus-visible { outline: 3px solid #40538f; outline-offset: 4px; border-radius: 6px; }
+.featured-carousel .product-image:focus-visible { outline-offset: -4px; }
+.featured-product-name { text-decoration: none; }
+.featured-product-name:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 900px) {
+    .featured-carousel { grid-auto-columns: calc((100% - 14px) / 2); }
+}
+
+@media (max-width: 600px) {
+    .featured-carousel { grid-auto-columns: 100%; }
+}

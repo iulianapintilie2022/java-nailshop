@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="de"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bestellbestätigung | the nailshop</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/orders.css}">
+</head>
+
+<body>
+
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="page-shell">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
+        <main id="main-content" class="account-content orders-content">
+            <section class="welcome-panel" aria-labelledby="confirmation-title">
+                <div class="welcome-heading"><h1 id="confirmation-title">Bestellbestätigung</h1></div>
+                <p>Deine Bestellung wurde erfolgreich aufgegeben.</p>
+            </section>
+
+            <p th:if="${error}" th:text="${error}" class="account-message message-error" role="alert"></p>
+
+            <section class="account-panel order-card" aria-labelledby="order-title">
+                <div class="order-heading">
+                    <h2 id="order-title">Bestellung #<span th:text="${order.id}">1</span></h2>
+                    <p class="order-status-line">Status:
+                        <span class="order-status"
+                              th:classappend="${order.status == 'PAID' ? 'status-paid' : (order.status == 'PENDING_PAYMENT' ? 'status-pending' : 'status-neutral')}"
+                              th:text="${order.status == 'PAID' ? 'Bezahlt' : (order.status == 'PENDING_PAYMENT' ? 'Zahlung ausstehend' : (order.status == 'CANCELLED' ? 'Storniert' : (order.status == 'PAID_STOCK_ISSUE' ? 'Bezahlt – Bestandsproblem' : order.status)))}">Zahlung ausstehend</span>
+                    </p>
+                </div>
+                <p class="order-date">Datum: <span th:text="${#temporals.format(order.orderDate, 'dd.MM.yyyy')}"></span></p>
+
+                <div class="order-section order-summary">
+                    <h3>Gesamt: <span th:text="${'€' + #numbers.formatDecimal(order.totalPrice, 1, 2)}">€0.00</span></h3>
+                </div>
+                <div class="order-section">
+                    <h3>Lieferadresse</h3>
+                    <p class="delivery-address">
+                        <span th:text="${order.recipientName}"></span><br>
+                        <span th:text="${order.shippingStreet}"></span><br>
+                        <span th:text="${order.shippingPostalCode}"></span> <span th:text="${order.shippingCity}"></span><br>
+                        <span th:text="${order.shippingCountry}"></span>
+                    </p>
+                </div>
+                <div class="order-section order-summary">
+                    <div class="payment-pending" th:if="${order.status == 'PENDING_PAYMENT'}">
+                        <p>Deine Bestellung ist gespeichert. Du kannst jetzt bezahlen oder später zurückkehren.</p>
+                        <form th:action="@{/orders/{id}/pay(id=${order.id})}" method="post">
+                            <button class="button" type="submit">Jetzt bezahlen</button>
+                        </form>
+                    </div>
+                    <p th:if="${order.status == 'PAID'}">Deine Zahlung wurde bestätigt. Vielen Dank!</p>
+                    <p th:if="${order.status == 'PAID_STOCK_ISSUE'}">Zahlung eingegangen. Es gibt ein Problem mit der Produktverfügbarkeit. Bitte kontaktiere uns.</p>
+                    <p th:if="${order.status == 'CANCELLED'}">Diese Bestellung wurde storniert.</p>
+                </div>
+            </section>
+
+            <a class="outline-button back-to-account" th:href="@{/products}">Weiter einkaufen</a>
+        </main>
+    </div>
+
+</body>
+</html>
+

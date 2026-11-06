@@ -1,0 +1,26 @@
+.login-main { display: flex; justify-content: center; padding: 48px 0; }
+.login-card { width: min(100%, 480px); overflow: hidden; border: 1px solid var(--border); border-radius: 8px; }
+.login-heading { padding: 30px 32px; border-bottom: 1px solid var(--border); background: #f3f8ff; }
+.login-heading h1 { margin: 0 0 10px; font-size: 32px; line-height: 1.2; letter-spacing: -0.7px; }
+.login-heading p { margin: 0; color: #4a526b; }
+.login-form { display: grid; gap: 22px; padding: 30px 32px 24px; }
+.login-form > div { display: grid; gap: 8px; }
+.login-form label { font-weight: 600; }
+.login-form input { width: 100%; min-width: 0; min-height: 46px; padding: 10px 12px; border: 1px solid #bdcbe0; border-radius: 5px; background: #fff; color: var(--ink); font: inherit; }
+.login-form input::placeholder { color: #687187; }
+.login-form input:focus-visible { outline: 3px solid #40538f; outline-offset: 3px; }
+.login-form .button { width: 100%; margin-top: 2px; font-weight: 600; }
+.register-link { margin: 0; padding: 0 32px 30px; text-align: center; }
+.register-link a { color: #2446b4; text-underline-offset: 3px; }
+.login-message { margin: 24px 32px 0; padding: 12px 14px; border: 1px solid; border-radius: 6px; }
+.login-error { background: #fff2f3; color: #9b273b; border-color: #ecc6cc; }
+.login-success { background: #edf8f0; color: #206243; border-color: #b6dbc3; }
+
+@media (max-width: 600px) {
+    .login-main { padding: 24px 0; }
+    .login-heading { padding: 24px 20px; }
+    .login-heading h1 { font-size: 28px; }
+    .login-form { padding: 24px 20px; }
+    .register-link { padding: 0 20px 24px; }
+    .login-message { margin: 20px 20px 0; }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kategorien verwalten | the nailshop</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-products.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-categories.css}">
+    <script th:src="@{/js/admin-categories.js}" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="page-shell admin-shell">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
+        <div class="admin-layout">
+            <aside class="admin-sidebar">
+                <nav aria-label="Shopverwaltung">
+                    <a class="admin-nav-link" th:href="@{/admin/products}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 10h18l-2-7H5l-2 7ZM5 10v11h14V10M9 21v-7h6v7M3 10v2a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0v-2"/></svg>
+                        Produkte
+                    </a>
+                    <a class="admin-nav-link is-current" th:href="@{/admin/categories}" aria-current="page">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h7l2 3h9v12H3V6Z"/></svg>
+                        Kategorien
+                    </a>
+                </nav>
+            </aside>
+            <main id="main-content" class="admin-content">
+                <div class="admin-heading">
+                    <h1>Kategorien verwalten</h1>
+                    <a class="button admin-primary open-category-form" th:href="@{/admin/categories/new}">+ Kategorie hinzufügen</a>
+                </div>
+                <p class="admin-category-error" th:if="${error}" th:text="${error}" role="alert"></p>
+                <p class="admin-empty" th:if="${#lists.isEmpty(categories)}">Noch keine Kategorien verfügbar.</p>
+                <div class="admin-table-wrap" th:if="${not #lists.isEmpty(categories)}" tabindex="0" role="region" aria-label="Kategorientabelle">
+                    <table class="admin-product-table admin-category-table">
+                        <thead><tr><th scope="col">Name</th><th scope="col">Aktionen</th></tr></thead>
+                        <tbody>
+                            <tr th:each="category : ${categories}">
+                                <td>
+                                    <span th:text="${category.name}">Kategoriename</span>
+                                    <span class="category-discount" th:if="${category.discountPercentage != null and category.discountPercentage > 0}"
+                                          th:text="${'— ' + category.discountPercentage + '% Rabatt'}">— 70% Rabatt</span>
+                                </td>
+                                <td><div class="admin-actions">
+                                    <a class="admin-edit open-category-form" th:href="@{/admin/categories/edit/{id}(id=${category.id})}">Bearbeiten</a>
+                                    <form class="category-delete-form" th:action="@{/admin/categories/delete/{id}(id=${category.id})}" method="post"
+                                          th:data-category-name="${category.name}">
+                                        <button class="admin-delete open-category-delete" type="button">Löschen</button>
+                                    </form>
+                                </div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+    <dialog class="category-dialog" aria-labelledby="category-form-title">
+        <button class="dialog-close" type="button" aria-label="Kategorieformular schließen">&times;</button>
+        <div class="category-dialog-content"></div>
+    </dialog>
+    <dialog class="delete-category-dialog delete-product-dialog" aria-labelledby="delete-category-title" aria-describedby="delete-category-name">
+        <h2 id="delete-category-title">Diese Kategorie löschen?</h2>
+        <p id="delete-category-name"></p>
+        <div class="delete-dialog-actions">
+            <button class="admin-edit cancel-category-delete" type="button" autofocus>Abbrechen</button>
+            <button class="button admin-primary confirm-category-delete" type="button">Löschen</button>
+        </div>
+    </dialog>
+</body>
+</html>

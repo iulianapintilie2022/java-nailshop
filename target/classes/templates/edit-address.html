@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Adresse bearbeiten | the nailshop</title>
+</head>
+
+<body>
+
+    <h1>Adresse bearbeiten</h1>
+
+    <p th:if="${error}"
+       th:text="${error}"
+       style="color: red;">
+    </p>
+
+    <form th:action="@{/account/address/{id}/edit(
+            id=${address.id})}"
+          method="post">
+
+        <p>
+            <label for="street">Straße</label>
+            <br>
+            <input type="text"
+                   id="street"
+                   name="street"
+                   th:value="${address.street}"
+                   required>
+        </p>
+
+        <p>
+            <label for="houseNumber">Hausnummer</label>
+            <br>
+            <input type="text"
+                   id="houseNumber"
+                   name="houseNumber"
+                   th:value="${address.houseNumber}"
+                   required>
+        </p>
+
+        <p>
+            <label for="postalCode">Postleitzahl</label>
+            <br>
+            <input type="text"
+                   id="postalCode"
+                   name="postalCode"
+                   th:value="${address.postalCode}"
+                   required>
+        </p>
+
+        <p>
+            <label for="city">Stadt</label>
+            <br>
+            <input type="text"
+                   id="city"
+                   name="city"
+                   th:value="${address.city}"
+                   required>
+        </p>
+
+        <p>
+            <label for="country">Land</label>
+            <br>
+            <input type="text"
+                   id="country"
+                   name="country"
+                   th:value="${address.country}"
+                   required>
+        </p>
+
+        <button type="submit">
+            Änderungen speichern
+        </button>
+
+        <a th:href="@{/account}">
+            Abbrechen
+        </a>
+
+    </form>
+
+</body>
+</html>

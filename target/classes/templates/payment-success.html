@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Zahlungsstatus | the nailshop</title>
+</head>
+
+<body>
+
+    <div th:if="${paymentStatus == 'PAID'}">
+        <h1>Vielen Dank für deine Bestellung!</h1>
+
+        <p>
+            Deine Zahlung wurde erfolgreich bestätigt.
+        </p>
+
+        <p>
+            Dein Warenkorb wurde geleert.
+        </p>
+
+        <a href="/products">Weiter einkaufen</a>
+    </div>
+
+    <div th:if="${paymentStatus == 'PENDING'}">
+        <h1>Wir prüfen deine Zahlung</h1>
+
+        <p>
+            Deine Bestellung ist eingegangen. Die Bestätigung
+            deiner Zahlung wird noch verarbeitet.
+        </p>
+
+        <p>
+            Bitte aktualisiere diese Seite in einem Moment.
+        </p>
+    </div>
+
+    <div th:if="${paymentStatus == 'PAID_STOCK_ISSUE'}">
+        <h1>Zahlung eingegangen</h1>
+
+        <p>
+            Deine Zahlung ist eingegangen, aber es gibt
+            ein Problem mit der Produktverfügbarkeit.
+            Bitte kontaktiere uns wegen deiner Bestellung.
+        </p>
+    </div>
+
+    <div th:if="${paymentStatus == 'UNKNOWN'}">
+        <h1>Bestellung nicht gefunden</h1>
+
+        <p>
+            Wir konnten diesen Zahlungsvorgang nicht zuordnen.
+        </p>
+
+        <a href="/cart">Zurück zum Warenkorb</a>
+    </div>
+
+</body>
+</html>

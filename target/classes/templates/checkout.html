@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kasse | the nailshop</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+</head>
+
+<body>
+
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="page-shell">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
+        <main id="main-content" class="checkout-main">
+            <h1>Kasse</h1>
+            <p th:if="${error}" th:text="${error}" class="checkout-error" role="alert"></p>
+            <div class="checkout-layout">
+                <section class="checkout-panel order-panel" aria-labelledby="order-title">
+                    <h2 id="order-title">Deine Bestellung</h2>
+                    <article class="checkout-item" th:each="item : ${items}">
+                        <img th:src="${item.product.imageUrl}" th:alt="${item.product.name}">
+                        <div class="checkout-item-details">
+                            <h3 th:text="${item.product.name}">Produkt</h3>
+                            <p class="checkout-unit-price" th:text="${'€' + item.product.discountedPrice}">€0.00</p>
+                            <p>Menge: <span th:text="${item.quantity}">1</span></p>
+                        </div>
+                        <p class="checkout-item-subtotal">Zwischensumme: <strong th:text="${'€' + #numbers.formatDecimal(item.subtotal, 1, 2)}">€0.00</strong></p>
+                    </article>
+                    <div class="checkout-totals" th:with="itemCount=${#aggregates.sum(items.![quantity])}">
+                        <div class="checkout-subtotal">
+                            <span th:text="${'Zwischensumme (' + itemCount + ' Artikel)'}">Zwischensumme</span>
+                            <span th:text="${'€' + #numbers.formatDecimal(total, 1, 2)}">€0.00</span>
+                        </div>
+                        <div class="checkout-total"><span>Gesamt</span><span th:text="${'€' + #numbers.formatDecimal(total, 1, 2)}">€0.00</span></div>
+                    </div>
+                </section>
+
+                <form class="checkout-form" th:action="@{/checkout/place-order}" method="post">
+                    <section class="checkout-panel delivery-panel" aria-labelledby="delivery-title">
+                        <h2 id="delivery-title" th:text="${customer != null ? 'Lieferadresse' : 'Lieferinformationen'}">Lieferinformationen</h2>
+                        <div class="checkout-field">
+                            <label for="contactEmail">E-Mail-Adresse</label>
+                            <input type="email" id="contactEmail" name="contactEmail" autocomplete="email"
+                                   th:value="${customer != null ? customer.email : ''}" required>
+                        </div>
+                        <div class="checkout-field">
+                            <label for="recipientName">Vollständiger Name</label>
+                            <input type="text" id="recipientName" name="recipientName" autocomplete="name"
+                                   th:value="${customer != null ? customer.firstName + ' ' + customer.lastName : ''}" required>
+                        </div>
+
+                        <fieldset class="saved-addresses" th:if="${customer != null and !addresses.isEmpty()}">
+                            <legend>Lieferadresse auswählen</legend>
+                            <label class="saved-address-card" th:each="address : ${addresses}">
+                                <input type="radio" name="savedAddressId" th:value="${address.id}" class="address-option">
+                                <span>
+                                    <strong th:text="${customer.firstName + ' ' + customer.lastName}">Kunde</strong><br>
+                                    <span th:text="${address.street}">Straße</span> <span th:text="${address.houseNumber}">1</span><br>
+                                    <span th:text="${address.postalCode}">12345</span> <span th:text="${address.city}">Stadt</span><br>
+                                    <span th:text="${address.country}">Land</span>
+                                </span>
+                            </label>
+                            <label class="different-address">
+                                <input type="radio" name="savedAddressId" value="" class="address-option" checked>
+                                <span>Andere Adresse verwenden</span>
+                            </label>
+                        </fieldset>
+                        <p class="no-saved-addresses" th:if="${customer != null and addresses.isEmpty()}">Du hast noch keine gespeicherten Adressen. Gib unten deine Lieferadresse ein.</p>
+
+                        <div id="manualAddressFields" class="manual-address-fields">
+                            <h3>Lieferadresse</h3>
+                            <div class="checkout-field">
+                                <label for="shippingStreet">Straße und Hausnummer</label>
+                                <input type="text" id="shippingStreet" name="shippingStreet" autocomplete="street-address" required>
+                            </div>
+                            <div class="checkout-field">
+                                <label for="shippingPostalCode">Postleitzahl</label>
+                                <input type="text" id="shippingPostalCode" name="shippingPostalCode" autocomplete="postal-code" required>
+                            </div>
+                            <div class="checkout-field">
+                                <label for="shippingCity">Stadt</label>
+                                <input type="text" id="shippingCity" name="shippingCity" autocomplete="address-level2" required>
+                            </div>
+                            <div class="checkout-field">
+                                <label for="shippingCountry">Land</label>
+                                <input type="text" id="shippingCountry" name="shippingCountry" autocomplete="country-name" placeholder="Deutschland" required>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="checkout-panel checkout-actions">
+                        <button class="button place-order-button" type="submit">Bestellung aufgeben</button>
+                        <a class="back-to-cart" th:href="@{/cart}"><span aria-hidden="true">←</span> Zurück zum Warenkorb</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+<script>
+    const addressOptions =
+        document.querySelectorAll(".address-option");
+
+    const manualFields =
+        document.getElementById("manualAddressFields");
+
+    const manualInputs =
+        manualFields.querySelectorAll("input");
+
+    function updateAddressSelection() {
+
+        const selected =
+            document.querySelector(
+                'input[name="savedAddressId"]:checked'
+            );
+
+        // A saved address is selected when
+        // the radio has a non-empty ID.
+        const usingSavedAddress =
+            selected !== null && selected.value !== "";
+
+        manualFields.hidden = usingSavedAddress;
+
+        manualInputs.forEach(input => {
+            input.disabled = usingSavedAddress;
+            input.required = !usingSavedAddress;
+        });
+    }
+
+    addressOptions.forEach(option => {
+        option.addEventListener(
+            "change",
+            updateAddressSelection
+        );
+    });
+
+    updateAddressSelection();
+</script>
+
+</body>
+</html>

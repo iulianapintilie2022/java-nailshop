@@ -1,0 +1,124 @@
+.account-shell {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+.account-shell .site-header { border: 0; border-bottom: 1px solid var(--border); border-radius: 0; }
+.account-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); }
+.account-sidebar {
+    padding: 24px 20px;
+    border-right: 1px solid var(--border);
+    background: #f7faff;
+}
+.account-navigation { display: grid; gap: 10px; }
+.account-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    min-height: 58px;
+    padding: 14px 18px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+}
+.account-nav-link svg { flex: 0 0 26px; width: 26px; height: 26px; }
+.account-nav-link:hover { background: #edf2fa; }
+.account-nav-link.is-current { background: #e2ecfc; color: #1538b5; }
+.signout-form { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--border); }
+
+.account-content { display: grid; align-content: start; gap: 22px; min-width: 0; padding: 24px; }
+.welcome-panel { padding: 30px 26px; border: 1px solid #e0eaff; border-radius: 8px; background: #f3f8ff; }
+.welcome-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.welcome-heading h1 { margin: 0; font-size: 36px; line-height: 1.2; letter-spacing: -1px; overflow-wrap: anywhere; }
+.welcome-panel p { margin: 12px 0 0; font-size: 18px; line-height: 1.5; }
+.admin-badge { padding: 4px 16px; border-radius: 18px; background: #f6b2eb; font-weight: 700; }
+.account-panel { position: relative; min-width: 0; padding: 26px; border: 1px solid var(--border); border-radius: 8px; scroll-margin-top: 24px; }
+.account-panel h2 { margin: 0 0 22px; font-size: 24px; line-height: 1.3; letter-spacing: -0.5px; }
+.panel-empty { margin: 0; color: #4a526b; }
+
+.order-table-wrap { overflow-x: auto; border-radius: 7px; }
+.order-table-wrap:focus-visible, .new-address summary:focus-visible, .address-form input:focus-visible { outline: 3px solid #40538f; outline-offset: 3px; }
+.last-order-table { width: 100%; border-collapse: collapse; text-align: left; }
+.last-order-table th { background: #f4f7fb; font-size: 14px; font-weight: 600; }
+.last-order-table th, .last-order-table td { padding: 13px 16px; white-space: nowrap; }
+.last-order-table td { border-bottom: 1px solid #eef2f8; }
+.order-status { display: inline-block; padding: 5px 10px; border-radius: 9px; background: #dfecff; color: #1538b5; font-size: 14px; }
+
+.outline-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 6px 16px;
+    border: 1px solid #4966c5;
+    border-radius: 5px;
+    background: #fff;
+    color: #2446b4;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+.outline-button:hover { background: #f0f5ff; }
+#addresses > h2 { padding-right: 180px; min-height: 38px; }
+.new-address > summary { position: absolute; top: 24px; right: 26px; list-style: none; }
+.new-address > summary::-webkit-details-marker { display: none; }
+.new-address[open] > summary { background: #edf3ff; }
+.address-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 24px; padding: 20px; border-radius: 7px; background: #f7faff; }
+.form-field { display: grid; gap: 6px; }
+.form-field label { font-size: 14px; font-weight: 700; }
+.form-field input { width: 100%; min-width: 0; min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbe0; border-radius: 5px; color: var(--ink); background: #fff; font: inherit; }
+.form-submit { grid-column: 1 / -1; }
+.address-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.address-card { display: flex; flex-direction: column; min-width: 0; padding: 20px; border: 1px solid var(--border); border-radius: 7px; overflow-wrap: anywhere; }
+.address-card p { margin: 0 0 10px; line-height: 1.55; }
+.address-name { font-weight: 600; }
+.address-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: auto; padding-top: 8px; }
+.address-actions form { margin: 0; }
+.delete-button { min-height: 38px; padding: 6px 4px; border: 0; background: transparent; color: #a32b3c; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+.profile-details { display: grid; gap: 16px; margin: 0; }
+.profile-details div { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 14px; }
+.profile-details dt { color: #4a526b; }
+.profile-details dd { margin: 0; overflow-wrap: anywhere; }
+.management-links { display: flex; flex-wrap: wrap; gap: 14px; }
+.account-message { margin: 0; padding: 14px 18px; border: 1px solid; border-radius: 7px; }
+.message-success { color: #206243; background: #edf8f0; border-color: #b6dbc3; }
+.message-error { color: #9b273b; background: #fff2f3; border-color: #ecc6cc; }
+
+@media (max-width: 900px) {
+    .account-layout { grid-template-columns: 195px minmax(0, 1fr); }
+    .account-sidebar { padding: 20px 12px; }
+    .account-nav-link { padding: 12px; gap: 12px; }
+    .account-content { padding: 18px; gap: 18px; }
+    .account-panel, .welcome-panel { padding: 20px; }
+    .welcome-heading h1 { font-size: 30px; }
+    .address-grid { grid-template-columns: 1fr; }
+    .new-address > summary { top: 18px; right: 20px; }
+}
+
+@media (max-width: 700px) {
+    .account-layout { grid-template-columns: 1fr; }
+    .account-sidebar { border-right: 0; border-bottom: 1px solid var(--border); padding: 12px; }
+    .account-navigation { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    .account-nav-link { min-height: 46px; }
+    .signout-form { margin-top: 10px; padding-top: 10px; }
+    .signout-form .account-nav-link { width: auto; }
+    .account-content { padding: 14px; }
+    .account-panel, .welcome-panel { padding: 18px; }
+    .welcome-panel p { font-size: 16px; }
+    .welcome-heading h1 { font-size: 28px; }
+    .account-panel h2 { font-size: 22px; }
+    #addresses > h2 { padding-right: 0; min-height: 0; margin-bottom: 14px; }
+    .new-address { margin-bottom: 18px; }
+    .new-address > summary { position: static; width: fit-content; }
+    .address-form { grid-template-columns: 1fr; margin: 16px 0 0; padding: 14px; }
+    .last-order-table th, .last-order-table td { padding: 12px; }
+    .address-card { padding: 16px; }
+    .profile-details div { grid-template-columns: 1fr; gap: 4px; }
+}
