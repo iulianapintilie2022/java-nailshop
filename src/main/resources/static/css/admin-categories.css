@@ -1,0 +1,17 @@
+.admin-category-table td { padding-top: 18px; padding-bottom: 18px; }
+.admin-category-table th:last-child, .admin-category-table td:last-child { width: 210px; }
+.category-discount { display: inline-block; margin-left: 8px; color: #a13654; font-size: 14px; }
+.category-delete-form { margin: 0; }
+.admin-category-error { margin: 0 0 22px; padding: 14px 18px; border: 1px solid #ecc6cc; border-radius: 7px; background: #fff2f3; color: #9b273b; }
+.category-dialog { position: fixed; width: min(520px, calc(100% - 32px)); max-width: none; max-height: calc(100dvh - 32px); padding: 0; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--ink); box-shadow: 0 16px 48px #0b112e26; }
+.category-dialog::backdrop { background: #0b112e26; }
+.category-dialog .category-editor { max-width: none; border: 0; border-radius: 0; }
+.category-dialog h1 { padding-right: 36px; }
+.category-editor small { color: #4a526b; }
+
+@media (max-width: 600px) {
+    .admin-category-table th, .admin-category-table td { padding-left: 12px; padding-right: 12px; }
+    .admin-category-table .admin-actions { flex-wrap: wrap; }
+    .admin-category-table th:last-child, .admin-category-table td:last-child { width: auto; }
+    .category-discount { display: block; margin: 4px 0 0; }
+}

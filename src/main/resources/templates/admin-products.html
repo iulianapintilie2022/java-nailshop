@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Produktverwaltung | the nailshop</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-products.css}">
+    <script th:src="@{/js/admin-products.js}" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="page-shell admin-shell">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
+        <div class="admin-layout">
+            <aside class="admin-sidebar">
+                <nav aria-label="Shopverwaltung">
+                    <a class="admin-nav-link is-current" th:href="@{/admin/products}" aria-current="page">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 10h18l-2-7H5l-2 7ZM5 10v11h14V10M9 21v-7h6v7M3 10v2a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0v-2"/></svg>
+                        Produkte
+                    </a>
+                    <a class="admin-nav-link" th:href="@{/admin/categories}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h7l2 3h9v12H3V6Z"/></svg>
+                        Kategorien
+                    </a>
+                </nav>
+            </aside>
+            <main id="main-content" class="admin-content">
+                <div class="admin-heading">
+                    <h1>Produkte verwalten</h1>
+                    <a class="button admin-primary open-product-form" th:href="@{/admin/products/new}">+ Produkt hinzufügen</a>
+                </div>
+                <p class="admin-empty" th:if="${#lists.isEmpty(products)}">Noch keine Produkte verfügbar.</p>
+                <div class="admin-table-wrap" th:if="${not #lists.isEmpty(products)}" tabindex="0" role="region" aria-label="Produkttabelle">
+                    <table class="admin-product-table">
+                        <thead><tr><th scope="col">Bild</th><th scope="col">Name</th><th scope="col">Preis</th><th scope="col">Bestand</th><th scope="col">Kategorie</th><th scope="col">Aktionen</th></tr></thead>
+                        <tbody>
+                            <tr th:each="product : ${products}">
+                                <td><img class="admin-product-image" th:src="${product.imageUrl}" th:alt="${product.name}"></td>
+                                <td th:text="${product.name}">Produkt</td>
+                                <td class="admin-price">
+                                    <th:block th:if="${product.category != null and product.category.discountPercentage != null and product.category.discountPercentage > 0}">
+                                        <del th:text="${'€' + #numbers.formatDecimal(product.price, 1, 2)}">€15.49</del>
+                                        <strong th:text="${'€' + product.discountedPrice}">€4.65</strong>
+                                        <span class="admin-discount" th:text="${'(-' + product.category.discountPercentage + '%)'}">(-70%)</span>
+                                    </th:block>
+                                    <span th:unless="${product.category != null and product.category.discountPercentage != null and product.category.discountPercentage > 0}"
+                                          th:text="${'€' + product.discountedPrice}">€15.49</span>
+                                </td>
+                                <td th:text="${product.stock}">0</td>
+                                <td th:text="${product.category != null ? product.category.name : 'Keine Kategorie'}">Kategorie</td>
+                                <td><div class="admin-actions">
+                                    <a class="admin-edit open-product-form" th:href="@{/admin/products/edit/{id}(id=${product.id})}">Bearbeiten</a>
+                                    <button class="admin-delete" type="button"
+                                            th:data-delete-url="@{/admin/products/delete/{id}(id=${product.id})}"
+                                            th:data-product-name="${product.name}">Löschen</button>
+                                </div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+    <dialog class="product-dialog" aria-labelledby="product-form-title">
+        <button class="dialog-close" type="button" aria-label="Produktformular schließen">&times;</button>
+        <div class="product-dialog-content"></div>
+    </dialog>
+    <dialog class="delete-product-dialog" aria-labelledby="delete-product-title" aria-describedby="delete-product-name">
+        <h2 id="delete-product-title">Dieses Produkt löschen?</h2>
+        <p id="delete-product-name"></p>
+        <div class="delete-dialog-actions">
+            <button class="admin-edit cancel-product-delete" type="button" autofocus>Abbrechen</button>
+            <button class="button admin-primary confirm-product-delete" type="button">Löschen</button>
+        </div>
+    </dialog>
+</body>
+</html>

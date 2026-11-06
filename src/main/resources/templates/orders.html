@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meine Bestellungen | the nailshop</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/orders.css}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="page-shell account-shell">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
+        <div class="account-layout">
+            <aside class="account-sidebar" aria-label="Kontonavigation">
+                <nav class="account-navigation" aria-label="Mein Konto">
+                    <a class="account-nav-link" th:href="@{/account}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></svg>
+                        Übersicht
+                    </a>
+                    <a class="account-nav-link is-current" th:href="@{/account/orders}" aria-current="page">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 3h3l3 13h11l3-10H6"/><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/></svg>
+                        Bestellungen
+                    </a>
+                    <a class="account-nav-link" th:href="@{/account#addresses}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Adressen
+                    </a>
+                    <a class="account-nav-link" th:href="@{/account#profile}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M3 22v-2a9 9 0 0 1 18 0v2Z"/></svg>
+                        Profil
+                    </a>
+                </nav>
+                <form class="signout-form" th:action="@{/logout}" method="post">
+                    <button class="account-nav-link" type="submit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 3H4v18h9M9 12h13m-5-5 5 5-5 5"/></svg>
+                        Abmelden
+                    </button>
+                </form>
+            </aside>
+
+            <main id="main-content" class="account-content orders-content">
+                <section class="welcome-panel" aria-labelledby="orders-title">
+                    <div class="welcome-heading"><h1 id="orders-title">Meine Bestellungen</h1></div>
+                </section>
+
+                <section class="account-panel" th:if="${#lists.isEmpty(orders)}">
+                    <p class="panel-empty">Du hast noch keine Bestellungen aufgegeben.</p>
+                    <a class="outline-button explore-products" th:href="@{/products}">Produkte entdecken</a>
+                </section>
+
+                <section th:each="order : ${orders}" class="account-panel order-card">
+                    <div class="order-heading">
+                        <h2>Bestellung #<span th:text="${order.id}">1</span></h2>
+                        <p class="order-status-line">Status:
+                            <span class="order-status"
+                                  th:classappend="${order.status == 'PAID' ? 'status-paid' : (order.status == 'PENDING_PAYMENT' ? 'status-pending' : 'status-neutral')}"
+                                  th:text="${order.status == 'PAID' ? 'Bezahlt' : (order.status == 'PENDING_PAYMENT' ? 'Zahlung ausstehend' : (order.status == 'CANCELLED' ? 'Storniert' : (order.status == 'PAID_STOCK_ISSUE' ? 'Bezahlt – Bestandsproblem' : order.status)))}">Bezahlt</span>
+                        </p>
+                    </div>
+                    <p class="order-date">Datum: <span th:text="${#temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm')}"></span></p>
+
+                    <details class="order-section order-products">
+                        <summary>Bestellte Produkte</summary>
+                        <div class="ordered-product" th:each="item : ${orderItems[order.id]}">
+                            <p class="ordered-product-name"><strong th:text="${item.product.name}">Produkt</strong></p>
+                            <dl class="item-details">
+                                <div><dt>Menge</dt><dd th:text="${item.quantity}">1</dd></div>
+                                <div><dt>Einzelpreis</dt><dd th:text="${'€' + #numbers.formatDecimal(item.unitPrice, 1, 2)}">€15.49</dd></div>
+                                <div><dt>Zwischensumme</dt><dd th:text="${'€' + #numbers.formatDecimal(item.subtotal, 1, 2)}">€15.49</dd></div>
+                            </dl>
+                        </div>
+                    </details>
+
+                    <div class="order-section">
+                        <h3>Lieferinformationen</h3>
+                        <p class="delivery-address">
+                            <strong th:text="${order.recipientName}"></strong><br>
+                            <span th:text="${order.shippingStreet}"></span><br>
+                            <span th:text="${order.shippingPostalCode}"></span> <span th:text="${order.shippingCity}"></span><br>
+                            <span th:text="${order.shippingCountry}"></span>
+                        </p>
+                        <p class="contact-email">Kontakt-E-Mail: <span th:text="${order.contactEmail}"></span></p>
+                    </div>
+
+                    <div class="order-section order-summary">
+                        <h3>Gesamt: <span th:text="${'€' + #numbers.formatDecimal(order.totalPrice, 1, 2)}">€15.49</span></h3>
+                        <div th:if="${order.status == 'PENDING_PAYMENT'}" class="payment-pending">
+                            <p>Die Zahlung für deine Bestellung steht noch aus.</p>
+                            <form th:action="@{/orders/{id}/pay(id=${order.id})}" method="post">
+                                <button class="button" type="submit">Jetzt bezahlen</button>
+                            </form>
+                        </div>
+                        <p th:if="${order.status == 'PAID'}">Zahlung erfolgreich abgeschlossen.</p>
+                        <p th:if="${order.status == 'CANCELLED'}">Diese Bestellung wurde storniert.</p>
+                        <p th:if="${order.status == 'PAID_STOCK_ISSUE'}">Zahlung eingegangen. Bitte kontaktiere uns wegen der Produktverfügbarkeit.</p>
+                    </div>
+                </section>
+
+                <a class="back-to-account" th:href="@{/account}">Zurück zu meinem Konto</a>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

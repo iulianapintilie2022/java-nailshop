@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Zahlung abgebrochen | the nailshop</title>
+</head>
+
+<body>
+
+    <div th:if="${cancelError}">
+        <h1>Wir konnten die Stornierung nicht bestätigen</h1>
+        <p>
+            Bitte versuche es später erneut. Deine Bestellung wurde
+            nicht als storniert markiert.
+        </p>
+    </div>
+
+    <div th:unless="${cancelError}">
+        <h1>Zahlung abgebrochen</h1>
+
+        <p>
+            Deine Bestellung wurde erfolgreich storniert.
+            Es wurde keine Zahlung abgeschlossen.
+        </p>
+
+        <p>
+            Deine Produkte befinden sich noch im Warenkorb.
+        </p>
+    </div>
+
+    <a href="/cart">Zurück zum Warenkorb</a>
+
+</body>
+</html>

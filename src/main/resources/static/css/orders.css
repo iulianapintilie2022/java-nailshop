@@ -1,0 +1,41 @@
+.order-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.order-heading h2 { margin: 0; }
+.order-status-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; font-size: 14px; }
+.orders-content .order-status { border-radius: 9px; padding: 6px 12px; font-weight: 600; }
+.orders-content .status-paid { background: #e1f4e6; color: #24613b; }
+.orders-content .status-pending { background: #fff0d9; color: #92500e; }
+.orders-content .status-neutral { background: #edf0f5; color: #4a526b; }
+.order-date { margin: 10px 0 0; color: #4a526b; font-size: 14px; }
+.order-section { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+.order-section h3 { margin: 0 0 14px; font-size: 18px; }
+.order-products > summary { padding: 8px 0; font-size: 18px; font-weight: 700; cursor: pointer; }
+.order-products > summary::marker { color: #4966c5; }
+.order-products > summary:hover { color: #2446b4; }
+.order-products > summary:focus-visible { outline: 3px solid #40538f; outline-offset: 4px; border-radius: 3px; }
+.order-products[open] > summary { margin-bottom: 14px; }
+.ordered-product { padding: 16px; border-radius: 7px; background: #f7faff; overflow-wrap: anywhere; }
+.ordered-product + .ordered-product { margin-top: 12px; }
+.ordered-product-name { margin: 0 0 14px; }
+.item-details { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; }
+.item-details dt { margin-bottom: 4px; color: #4a526b; font-size: 14px; }
+.item-details dd { margin: 0; }
+.delivery-address { margin: 0; line-height: 1.6; overflow-wrap: anywhere; }
+.contact-email { margin: 12px 0 0; overflow-wrap: anywhere; }
+.order-summary h3 { font-size: 22px; }
+.order-summary p { margin: 0; }
+.payment-pending form { margin-top: 14px; }
+.explore-products { margin-top: 18px; }
+.back-to-account { width: fit-content; text-underline-offset: 4px; }
+
+@media (max-width: 900px) {
+    .order-heading { align-items: flex-start; }
+    .order-section { margin-top: 20px; }
+}
+
+@media (max-width: 480px) {
+    .item-details { grid-template-columns: 1fr; gap: 12px; }
+    .item-details div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+    .item-details dt { margin: 0; }
+    .ordered-product { padding: 14px; }
+    .order-status-line { width: 100%; }
+}
