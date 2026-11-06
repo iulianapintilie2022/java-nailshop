@@ -1,0 +1,68 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    # The project containing this compose.yaml is mounted into Ubuntu.
+    volumes:
+      - .:/workspace
+      - maven-cache:/home/developer/.m2
+      - stripe-data:/home/developer/.config/stripe
+    ports:
+      - "8080:8080"
+    environment:
+      STRIPE_SECRET_KEY: 
+      STRIPE_WEBHOOK_SECRET: 
+      APP_BASE_URL: http://localhost:8080
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/nailshop?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: nailshop
+      SPRING_DATASOURCE_PASSWORD: devpassword
+      # Local development only: create/update JPA tables automatically.
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+    # Runs the application directly; no bash session or manual Maven step.
+    command: ["mvn", "spring-boot:run"]
+
+  stripe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      STRIPE_API_KEY: *stripe_test_key
+    command:
+      - stripe
+      - listen
+      - --events
+      - checkout.session.completed,checkout.session.async_payment_succeeded
+      - --forward-to
+      - http://app:8080/stripe/webhook
+    depends_on:
+      app:
+        condition: service_started
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: nailshop
+      MYSQL_USER: nailshop
+      MYSQL_PASSWORD: 
+      MYSQL_ROOT_PASSWORD:
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 25
+      start_period: 30s
+
+volumes:
+  maven-cache:
+  stripe-data:
+  mysql-data:
