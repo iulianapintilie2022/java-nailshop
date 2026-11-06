@@ -34,8 +34,8 @@ You can log in with:
 
 | Account | Email | Password |
 | --- | --- | --- |
-| Admin | admin@thenailshop.com | admin |
-| Customer | customer@thenailshop.com | customer |
+| Admin | admin@thenailshop.com |
+| Customer | customer@thenailshop.com |
 
 The data loads only into a new, empty database. Starting again keeps your data.
 
